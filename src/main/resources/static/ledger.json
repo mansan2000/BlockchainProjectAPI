@@ -1,0 +1,5 @@
+[
+{"Nonce":"2232","Transactions":{"Transaction 2":{"From":"Phillip","To":"Emanuel","Amount $":25.0},"Transaction 1":{"From":"Phillip","To":"Emanuel","Amount $":20.0}},"Block#":1,"Previous Hash":"Genesis Block hash","Current Hash":"000ae3509af533f20c7e257c73644148b9b3ec096e6ace5be641078b6ece6b8f"},
+{"Nonce":"413","Transactions":{"Transaction 2":{"From":"Phillip","To":"Emanuel","Amount $":25.0},"Transaction 1":{"From":"Phillip","To":"Emanuel","Amount $":20.0}},"Block#":2,"Previous Hash":"000ae3509af533f20c7e257c73644148b9b3ec096e6ace5be641078b6ece6b8f","Current Hash":"000a4b2d698f485a8a7c4fcab3585654d2dd7ab4a43731812988b51be50d0301"},
+{"Nonce":"2474","Transactions":{"Transaction 4":{"From":"Ethan","To":"Gibbie","Amount $":25.0},"Transaction 2":{"From":"Phillip","To":"Emanuel","Amount $":25.0},"Transaction 3":{"From":"Ethan","To":"Gibbie","Amount $":25.0},"Transaction 1":{"From":"Phillip","To":"Emanuel","Amount $":20.0}},"Block#":3,"Previous Hash":"000a4b2d698f485a8a7c4fcab3585654d2dd7ab4a43731812988b51be50d0301","Current Hash":"00065013b64298a4de07b30aa11d9c91c7f5040249d2f397fed586559fb3e363"},
+]

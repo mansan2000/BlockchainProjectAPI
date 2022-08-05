@@ -1,3 +1,0 @@
-{
-{"Nonce":"2232","Transactions":{"Transaction 2":{"From":"Phillip","To":"Emanuel","Amount $":25.0},"Transaction 1":{"From":"Phillip","To":"Emanuel","Amount $":20.0}},"Block#":1,"Previous Hash":"Genesis Block hash","Current Hash":"000ae3509af533f20c7e257c73644148b9b3ec096e6ace5be641078b6ece6b8f"},
-}

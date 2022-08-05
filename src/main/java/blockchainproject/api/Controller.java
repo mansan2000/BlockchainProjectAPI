@@ -22,6 +22,8 @@ public class Controller {
         JSONObject blockT = new JSONObject();
         blockT.put("Transaction 1", new Transaction("Phillip", "Emanuel",20.0).getTransactionJSON());
         blockT.put("Transaction 2", new Transaction("Phillip", "Emanuel",25.0).getTransactionJSON());
+        blockT.put("Transaction 3", new Transaction("Ethan", "Gibbie",25.0).getTransactionJSON());
+        blockT.put("Transaction 4", new Transaction("Ethan", "Gibbie",25.0).getTransactionJSON());
 
         NewBlock block = new NewBlock(blockT);
 //        JSONObject obj = new JSONObject();
@@ -34,7 +36,11 @@ public class Controller {
 //    @GetMapping("/block")
 //    @CrossOrigin(origins = "http://localhost:3000")
 //    public Object block() {
-////        Block block1 = new Block("this","this","this","this");
+////        Chain.updateFromLedger();
+////        for (int i = 0; i < Chain.getChainSize(); i++) {
+////            Chain.ge
+////        }
+//////        Block block1 = new Block("this","this","this","this");
 ////        JSONObject obj = new JSONObject();
 ////        obj.put("hash", block1.getHash());
 ////        System.out.println(obj.toJSONString());

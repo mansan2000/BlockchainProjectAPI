@@ -15,23 +15,40 @@ import java.util.Scanner;
 
 public final class Chain {
     private static ArrayList<Block> chain = new ArrayList<>();
-    private static final String ledgerFile = "src/main/resources/static/ledger.txt";
+    private static final String ledgerFile = "src/main/resources/static/ledger.json";
     private Chain(){
     }
     public static void updateFromLedger(){
             try {
                 Scanner inputFile = new Scanner(new File(ledgerFile));
-//                inputFile.nextLine();
+                inputFile.nextLine();
                 while (inputFile.hasNextLine()) {
+                    String line = inputFile.nextLine();
+                    if (!line.equals("]")) {
 
-                    Scanner s = new Scanner(inputFile.nextLine());
-//                    createBlockFromLedger(String.valueOf(s));
+                        Scanner s = new Scanner(line);
+                        String text = s.useDelimiter("\\A").next();
+                        text = text.substring(0, text.length() - 1);
+                        System.out.println("logger" + text);
+                        JSONObject json = (JSONObject) new JSONParser().parse(text);
+                        String previousHash = (String) json.get("Previous Hash");
+                        String currentHash = (String) json.get("Current Hash");
+                        String nonce = (String) json.get("Nonce");
+                        Object transactionsString = json.get("Transactions");
+//                    JSONObject transactions = (JSONObject) new JSONParser().parse(transactionsString);
+                        Block b = new Block(previousHash, currentHash, (JSONObject) transactionsString, nonce, chain.size());
+                        createBlockFromLedger(b);
+                    } else {
+
+                    }
 
                 }
 
                 inputFile.close();
             } catch (FileNotFoundException  ff) {
                 System.out.println("\n\n\n\n\nException " + ff);
+            } catch (ParseException e) {
+                e.printStackTrace();
             }
     }
     public static void createBlockFromLedger(Block s) throws ParseException {
@@ -39,9 +56,9 @@ public final class Chain {
 
         try {
 
-            System.out.println(s.getBlockJSON());
+//            System.out.println(s.getBlockJSON());
             String previousHash = String.valueOf(s.getBlockJSON().get("Previous Hash"));
-            System.out.println(previousHash);
+//            System.out.println(previousHash);
             String currentHash = (String) s.getBlockJSON().get("Current Hash");
             JSONObject transactionsString = (JSONObject) s.getBlockJSON().get("Transactions");
             String nonce = (String) s.getBlockJSON().get("Nonce");
@@ -56,7 +73,7 @@ public final class Chain {
         try {
             PrintWriter ledger = new PrintWriter(ledgerFile);
 //            ledger.println("PREVIOUS HASH, CURRENT HASH, SENDER,RECIPIENT,AMOUNT, NONCE");
-            System.out.println("logger");
+//            System.out.println("logger");
             ledger.println("[");
 
             for (Block x : chain) {
@@ -98,13 +115,15 @@ public final class Chain {
 
         }
 //        System.out.println(preHash);
-//        System.out.println("preHash  "+  createHash(prospectiveBlock.getTransactions(), prospectiveBlock.getNonce(),prospectiveBlock.getPreviousHash()));
-//        System.out.println("thisHash  "+prospectiveBlock.getHash());
+        System.out.println("preHash  "+  createHash(prospectiveBlock.getTransactions(), prospectiveBlock.getNonce(),prospectiveBlock.getPreviousHash()));
+        System.out.println("thisHash  "+prospectiveBlock.getHash());
 
-        return prospectiveBlock.getHash().equals(createHash(String.valueOf(prospectiveBlock.getTransactions().toJSONString()), prospectiveBlock.getNonce(),preHash));
+//        return false;
+        return prospectiveBlock.getHash().equals(createHash(prospectiveBlock.getTransactions(), prospectiveBlock.getNonce(),preHash));
     }
-    public static String createHash(String transactions, String nonce,String previousHash) {
+    public static String createHash(JSONObject transactionsObject, String nonce,String previousHash) {
         String result = null;
+        String transactions = transactionsObject.toJSONString();
         try {
             MessageDigest digest = MessageDigest.getInstance("SHA-256");
             String contents = previousHash+transactions+nonce;

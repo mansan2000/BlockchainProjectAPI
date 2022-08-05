@@ -25,7 +25,7 @@ public class Block {
         JSONObject block = new JSONObject();
         block.put("Previous Hash", this.previousHash);
         block.put("Current Hash", this.hash);
-        block.put("Transactions",transactions);
+        block.put("Transactions",this.transactions);
         block.put("Nonce", this.nonce);
         block.put("Block#", this.blockNumber);
         return block;
