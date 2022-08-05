@@ -167,4 +167,7 @@ public final class Chain {
     public static int getChainSize(){
         return chain.size()+1;
     }
+    public static Block getBlock(int index){
+        return chain.get(index);
+    }
 }

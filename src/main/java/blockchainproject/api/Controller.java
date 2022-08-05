@@ -33,20 +33,38 @@ public class Controller {
 //        obj.put("Previous Transactions",Chain.getPreviousTransactions());
         return Chain.getChainJSON();
     }
-//    @GetMapping("/block")
-//    @CrossOrigin(origins = "http://localhost:3000")
-//    public Object block() {
-////        Chain.updateFromLedger();
-////        for (int i = 0; i < Chain.getChainSize(); i++) {
-////            Chain.ge
-////        }
-//////        Block block1 = new Block("this","this","this","this");
-////        JSONObject obj = new JSONObject();
-////        obj.put("hash", block1.getHash());
-////        System.out.println(obj.toJSONString());
-////
-////        return obj;
+    @RequestMapping("/balance")
+    @CrossOrigin(origins = "http://localhost:3000")
+    public int block(@RequestParam String name) {
+        Chain.updateFromLedger();
+        int total = 0;
+        for (int i = 0; i < Chain.getChainSize()-1; i++) {
+            Block x = Chain.getBlock(i);
+            Object j = x.getBlockJSON().get("Transactions");
+//            System.out.println(j);
+            JSONObject trans = (JSONObject) j;
+            Object eachTransaction = trans.get("Transaction "+4);
+            JSONObject specificTrans = (JSONObject) eachTransaction;
+//            System.out.println((JSONObject) eachTransaction );
+            try {
+//                System.out.println(trans);
+                System.out.println(specificTrans.get("To"));
+                if ( specificTrans.get("To").equals("Gibbie")) {
+//                    System.out.println(specificTrans);
+                    total += (double) specificTrans.get("Amount $");
+                } }catch (Exception e){
+//                System.out.println(e);
+            }
+        }
+        System.out.println(total);
+        return total;
+////        Block block1 = new Block("this","this","this","this");
+//        JSONObject obj = new JSONObject();
+//        obj.put("hash", block1.getHash());
+//        System.out.println(obj.toJSONString());
 //
-//    }
+//        return obj;
+
+    }
 
 }
