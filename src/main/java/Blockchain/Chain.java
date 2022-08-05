@@ -1,5 +1,9 @@
 package Blockchain;
 
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
@@ -11,36 +15,37 @@ import java.util.Scanner;
 
 public final class Chain {
     private static ArrayList<Block> chain = new ArrayList<>();
-    private static final String ledgerFile = "src/main/resources/static/ledgerCopy.csv";
+    private static final String ledgerFile = "src/main/resources/static/ledger.txt";
     private Chain(){
     }
     public static void updateFromLedger(){
             try {
                 Scanner inputFile = new Scanner(new File(ledgerFile));
-                inputFile.nextLine();
+//                inputFile.nextLine();
                 while (inputFile.hasNextLine()) {
 
                     Scanner s = new Scanner(inputFile.nextLine());
-                    createBlockFromLedger(s);
+//                    createBlockFromLedger(String.valueOf(s));
 
                 }
 
                 inputFile.close();
-            } catch (FileNotFoundException ff) {
+            } catch (FileNotFoundException  ff) {
                 System.out.println("\n\n\n\n\nException " + ff);
             }
     }
-    public static void createBlockFromLedger(Scanner s){
-        s.useDelimiter(",");
+    public static void createBlockFromLedger(Block s) throws ParseException {
+
 
         try {
 
-            String previousHash = s.next();
-            String currentHash = s.next();
-            Transaction transaction = new Transaction(s.next(),s.next(),Double.parseDouble(s.next()));
-//            System.out.println("o"+transaction.getTransactionJSON());
-            String nonce = s.next();
-                Block x = new Block(previousHash,currentHash,transaction,nonce, chain.size());
+            System.out.println(s.getBlockJSON());
+            String previousHash = String.valueOf(s.getBlockJSON().get("Previous Hash"));
+            System.out.println(previousHash);
+            String currentHash = (String) s.getBlockJSON().get("Current Hash");
+            JSONObject transactionsString = (JSONObject) s.getBlockJSON().get("Transactions");
+            String nonce = (String) s.getBlockJSON().get("Nonce");
+                Block x = new Block(previousHash,currentHash,transactionsString,nonce, chain.size());
                 Chain.tryToAddBlockToChain(x);
 
         } catch (IndexOutOfBoundsException e) {
@@ -50,12 +55,17 @@ public final class Chain {
     public static void writeToLedger(){
         try {
             PrintWriter ledger = new PrintWriter(ledgerFile);
-            ledger.println("PREVIOUS HASH, CURRENT HASH, SENDER,RECIPIENT,AMOUNT, NONCE");
+//            ledger.println("PREVIOUS HASH, CURRENT HASH, SENDER,RECIPIENT,AMOUNT, NONCE");
+            System.out.println("logger");
+            ledger.println("[");
+
             for (Block x : chain) {
 //                System.out.println("nonce: "+x.getAmount());
-                ledger.println(x.getPreviousHash()+","+x.getHash()+","+x.getSender()+","+x.getRecipient()+","+x.getAmount()+","+x.getNonce());
+//                        ledger.println(x.getPreviousHash()+","+x.getHash()+","+x.getSender()+","+x.getRecipient()+","+x.getAmount()+","+x.getNonce());
+                ledger.println(x.getBlockJSON()+",");
 
             }
+            ledger.println("]");
             ledger.close();
         }
         catch (Exception e){
@@ -91,7 +101,7 @@ public final class Chain {
 //        System.out.println("preHash  "+  createHash(prospectiveBlock.getTransactions(), prospectiveBlock.getNonce(),prospectiveBlock.getPreviousHash()));
 //        System.out.println("thisHash  "+prospectiveBlock.getHash());
 
-        return prospectiveBlock.getHash().equals(createHash(String.valueOf(prospectiveBlock.getTransaction().getTransactionJSON()), prospectiveBlock.getNonce(),preHash));
+        return prospectiveBlock.getHash().equals(createHash(String.valueOf(prospectiveBlock.getTransactions().toJSONString()), prospectiveBlock.getNonce(),preHash));
     }
     public static String createHash(String transactions, String nonce,String previousHash) {
         String result = null;
@@ -132,9 +142,9 @@ public final class Chain {
         return chain.get(chain.size()-1).getHash();
         }
     }
-    public static String getPreviousTransactions(){
-        return chain.get(chain.size()-1).getTransactions();
-    }
+//    public static String getPreviousTransactions(){
+//        return chain.get(chain.size()-1).getTransactions();
+//    }
     public static int getChainSize(){
         return chain.size()+1;
     }

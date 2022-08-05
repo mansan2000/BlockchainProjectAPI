@@ -4,6 +4,7 @@ package blockchainproject.api;
 //import Blockchain.Chain;
 
 import Blockchain.*;
+import org.json.simple.parser.ParseException;
 import org.springframework.web.bind.annotation.*;
 import org.json.simple.JSONObject;
 
@@ -16,9 +17,13 @@ public class Controller {
     }
     @RequestMapping("/test")
     @CrossOrigin(origins = "http://localhost:3000")
-    public Object test(@RequestParam String transaction) {
+    public Object test(@RequestParam String transaction) throws ParseException {
         Chain.updateFromLedger();
-        NewBlock block = new NewBlock("Phillip","Emanuel", 10.0);
+        JSONObject blockT = new JSONObject();
+        blockT.put("Transaction 1", new Transaction("Phillip", "Emanuel",20.0).getTransactionJSON());
+        blockT.put("Transaction 2", new Transaction("Phillip", "Emanuel",25.0).getTransactionJSON());
+
+        NewBlock block = new NewBlock(blockT);
 //        JSONObject obj = new JSONObject();
 ////        block.createHash();
         block.mine();

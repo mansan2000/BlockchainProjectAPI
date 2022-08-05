@@ -1,5 +1,8 @@
 package Blockchain;
 
+import org.json.simple.JSONObject;
+import org.json.simple.parser.ParseException;
+
 import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
@@ -14,8 +17,8 @@ public class NewBlock {
     private long comparableValueOfHash;
     private int nonce;
     private double amount;
-    private Transaction transaction;
-    public NewBlock(String sender, String recipient, double amount){
+    private JSONObject transactions;
+    public NewBlock(JSONObject transactions){
 //        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
         Date date = new Date();
         String timeStamp = String.valueOf(date);
@@ -25,7 +28,7 @@ public class NewBlock {
 //        this.previousHash=previousHash;
         this.nonce =0;
         this.hash="";
-        this.transaction = new Transaction(this.sender,this.recipient,this.amount);
+        this.transactions = transactions;
 
 
     }
@@ -34,7 +37,7 @@ public class NewBlock {
         try {
             MessageDigest digest = MessageDigest.getInstance("SHA-256");
 //            System.out.println("mine stuff: "+this.previousHash+" "+this.data+" "+this.nonce);
-            String contents = Chain.getPreviousHash()+transaction.getTransactionJSON()+this.nonce;
+            String contents = Chain.getPreviousHash()+transactions.toJSONString()+this.nonce;
             byte[] hash = digest.digest(contents.getBytes(StandardCharsets.UTF_8));
             StringBuilder sb = new StringBuilder();
             for (byte b : hash) {
@@ -49,7 +52,7 @@ public class NewBlock {
     }
 
 
-    public void mine(){
+    public void mine() throws ParseException {
         createHash();
         long startTime = System.currentTimeMillis();
         int counter = 1;
@@ -81,13 +84,15 @@ public class NewBlock {
 //        Chain.addBlock(y);
 //        System.out.println("hash in mine: "+Chain.getPreviousHash());
 //        System.out.println(transaction);
-        Block x = new Block(Chain.getPreviousHash(),hash,transaction,String.valueOf(nonce),Chain.getChainSize());
+        Block x = new Block(Chain.getPreviousHash(),hash,transactions,String.valueOf(nonce),Chain.getChainSize());
 //        System.out.println(x.getBlockJSON());
         String line = x.getPreviousHash()+","+x.getHash()+","+x.getSender()+","+x.getRecipient()+","+x.getAmount()+","+x.getNonce();
+//        String line = ""{"Block 0":{"Nonce":"3095","Transactions":{"From":"Phillip","To":"Emanuel","Amount $":10.0},"Block#":1,"Previous Hash":"Genesis Block hash","Current Hash":"00042096a4aae945c84d7062f4033c549aedc6559dcd7c14fdb9bf0160e85964"}}";
+        ;
 //            System.out.println(line);
 //        System.out.println(line);
         Scanner s = new Scanner(line);
-        Chain.createBlockFromLedger(s);
+        Chain.createBlockFromLedger((x));
         long endTime = System.currentTimeMillis();
 
         long time = endTime - startTime;

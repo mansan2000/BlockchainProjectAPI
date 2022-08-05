@@ -3,29 +3,29 @@ package Blockchain;
 import org.json.simple.JSONObject;
 
 public class Block {
-    private String previousHash, hash, transactions, nonce, sender, recipient;
+    private String previousHash, hash, nonce, sender, recipient;
     private double amount;
     private int blockNumber;
-    private Transaction transaction;
-    public Block(String previousHash, String newHash,  Transaction transaction, String nonce, int blockNumber){
+    private JSONObject transactions;
+    public Block(String previousHash, String newHash, JSONObject transactions, String nonce, int blockNumber){
         this.previousHash = previousHash;
         this.nonce = nonce;
         this.hash = newHash;
-        this.transaction = transaction;
-        this.sender = transaction.getSender();
-        this.recipient = transaction.getRecipient();
-        this.amount = transaction.getAmount();
+        this.transactions = transactions;
+//        this.sender = transactions.getSender();
+//        this.recipient = transactions.getRecipient();
+//        this.amount = transactions.getAmount();
         this.blockNumber = blockNumber+1;
 
     }
-    public Object getBlockJSON(){
+    public JSONObject getBlockJSON(){
 
 //        Transaction transactionList = new Transaction(sender,recipient,amount);
 
         JSONObject block = new JSONObject();
         block.put("Previous Hash", this.previousHash);
         block.put("Current Hash", this.hash);
-        block.put("Transactions",transaction.getTransactionJSON());
+        block.put("Transactions",transactions);
         block.put("Nonce", this.nonce);
         block.put("Block#", this.blockNumber);
         return block;
@@ -39,6 +39,14 @@ public class Block {
         this.previousHash = previousHash;
     }
 
+    public JSONObject getTransactions() {
+        return transactions;
+    }
+
+    public void setTransactions(JSONObject transactions) {
+        this.transactions = transactions;
+    }
+
     public String getHash() {
         return hash;
     }
@@ -47,13 +55,13 @@ public class Block {
         this.hash = hash;
     }
 
-    public String getTransactions() {
-        return transactions;
-    }
-
-    public void setTransactions(String transactions) {
-        this.transactions = transactions;
-    }
+//    public String getTransactions() {
+//        return transactions;
+//    }
+//
+//    public void setTransactions(String transactions) {
+//        this.transactions = transactions;
+//    }
 
     public String getNonce() {
         return nonce;
@@ -67,13 +75,13 @@ public class Block {
         return blockNumber;
     }
 
-    public Transaction getTransaction() {
-        return transaction;
-    }
-
-    public void setTransaction(Transaction transaction) {
-        this.transaction = transaction;
-    }
+//    public Transaction getTransaction() {
+//        return transaction;
+//    }
+//
+//    public void setTransaction(Transaction transaction) {
+//        this.transaction = transaction;
+//    }
 
     public String getSender() {
         return sender;
